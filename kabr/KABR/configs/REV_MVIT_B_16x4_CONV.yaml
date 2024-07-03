@@ -29,6 +29,7 @@ DATA:
   TEST_CROP_SIZE: 224
   INPUT_CHANNEL_NUM: [3]
   MULTI_LABEL: True
+  ENSEMBLE_METHOD: max
   PATH_TO_DATA_DIR: "/jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/kabr/KABR/annotation"
   PATH_PREFIX: "/jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/kabr/KABR/dataset/image"
   TRAIN_JITTER_SCALES_RELATIVE: [0.08, 1.0]
