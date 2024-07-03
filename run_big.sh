@@ -18,4 +18,4 @@ echo "Slurm job id: "${SLURM_JOB_ID}
 
 
 # Run python script
-python slowfast/tools/run_net.py --cfg kabr/KABR/configs/UNIFORMERv2_lr1e-4_ep50.yaml
+python slowfast/tools/run_net.py --cfg kabr/KABR/configs/UNIFORMERv2_lr2e-6_ep100.yaml
