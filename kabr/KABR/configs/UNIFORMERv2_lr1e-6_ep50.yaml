@@ -1,0 +1,112 @@
+TRAIN:
+  ENABLE: True
+  DATASET: charades
+  BATCH_SIZE: 192
+  EVAL_PERIOD: 5
+  CHECKPOINT_PERIOD: 10
+  AUTO_RESUME: True
+  #CHECKPOINT_FILE_PATH: /jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/slowfast/projects/uniformerv2/k400_k710_uniformerv2_b16_8x224.pyth
+  #CHECKPOINT_TYPE: pytorch
+  #CHECKPOINT_EPOCH_RESET: True
+  MIXED_PRECISION: True
+TEST:
+  ENABLE: True
+  DATASET: charades
+  BATCH_SIZE: 192
+  NUM_SPATIAL_CROPS: 1
+  NUM_ENSEMBLE_VIEWS: 1
+  SAVE_RESULTS_PATH: "/jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/kabr/KABR/logs/uniformerv2-kabr-kinetics-lr1e-6-ep50/results.txt"
+  CHECKPOINT_FILE_PATH: /jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/kabr/KABR/logs/uniformerv2-kabr-kinetics-lr1e-6-ep50/checkpoints/checkpoint_epoch_00050.pyth
+DATA:
+  USE_OFFSET_SAMPLING: True
+  DECODING_BACKEND: decord
+  NUM_FRAMES: 8
+  SAMPLING_RATE: 16
+  MULTI_LABEL: True
+  TRAIN_JITTER_SCALES: [256, 320]
+  TRAIN_CROP_SIZE: 224
+  TEST_CROP_SIZE: 224
+  INPUT_CHANNEL_NUM: [3]
+  PATH_TO_DATA_DIR: "/jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/kabr/KABR/annotation"
+  PATH_PREFIX: "/jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/kabr/KABR/dataset/image"
+  TRAIN_JITTER_SCALES_RELATIVE: [0.08, 1.0]
+  TRAIN_JITTER_ASPECT_RELATIVE: [0.75, 1.3333]
+UNIFORMERV2:
+  BACKBONE: 'uniformerv2_b16'
+  N_LAYERS: 4
+  N_DIM: 768
+  N_HEAD: 12
+  MLP_FACTOR: 4.0
+  BACKBONE_DROP_PATH_RATE: 0.
+  DROP_PATH_RATE: 0.
+  MLP_DROPOUT: [0.5, 0.5, 0.5, 0.5]
+  CLS_DROPOUT: 0.5
+  RETURN_LIST: [8, 9, 10, 11]
+  NO_LMHRA: True
+  TEMPORAL_DOWNSAMPLE: False
+  PRETRAIN: "/jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/slowfast/projects/uniformerv2/k400_k710_uniformerv2_b16_8x224.pyth"
+  DELETE_SPECIAL_HEAD: True
+AUG:
+  NUM_SAMPLE: 1
+  ENABLE: True
+  COLOR_JITTER: 0.4
+  AA_TYPE: rand-m7-n4-mstd0.5-inc1
+  INTERPOLATION: bicubic
+  RE_PROB: 0.
+  RE_MODE: pixel
+  RE_COUNT: 1
+  RE_SPLIT: False
+BN:
+  USE_PRECISE_STATS: False
+  NUM_BATCHES_PRECISE: 200
+SOLVER:
+  ZERO_WD_1D_PARAM: True
+  BASE_LR_SCALE_NUM_SHARDS: True
+  BASE_LR: 1e-6
+  COSINE_AFTER_WARMUP: True
+  COSINE_END_LR: 1e-6
+  WARMUP_START_LR: 1e-6
+  WARMUP_EPOCHS: 10.0
+  LR_POLICY: cosine
+  MAX_EPOCH: 50
+  MOMENTUM: 0.9
+  WEIGHT_DECAY: 0.05
+  OPTIMIZING_METHOD: adamw
+  COSINE_AFTER_WARMUP: True
+MODEL:
+  NUM_CLASSES: 8
+  ARCH: uniformerv2
+  MODEL_NAME: Uniformerv2
+  LOSS_FUNC: EQL  
+  DROPOUT_RATE: 0.5
+  USE_CHECKPOINT: False
+  CHECKPOINT_NUM: [0]
+
+DATA_LOADER:
+  NUM_WORKERS: 8
+  PIN_MEMORY: True
+
+  
+TENSORBOARD:
+  ENABLE: True
+  CLASS_NAMES_PATH: /jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/kabr/KABR/annotation/classes.json
+  CONFUSION_MATRIX:
+    ENABLE: True
+    SUBSET_PATH: /jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/kabr/KABR/annotation/classes.txt
+  HISTOGRAM:
+    ENABLE: True
+    TOPK: 3
+    SUBSET_PATH: /jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/kabr/KABR/annotation/classes.txt
+  MODEL_VIS:
+    ENABLE: False
+    MODEL_WEIGHTS: True
+    ACTIVATIONS: True
+    INPUT_VIDEO: True
+    LAYER_LIST: ['s5/pathway0_res14']
+    GRAD_CAM:
+      ENABLE: True
+      LAYER_LIST: ['s5/pathway0_res14']
+NUM_GPUS: 8
+NUM_SHARDS: 1
+RNG_SEED: 0
+OUTPUT_DIR: /jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/kabr/KABR/logs/uniformerv2-kabr-kinetics-lr1e-6-ep50
