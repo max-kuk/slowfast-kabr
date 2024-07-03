@@ -18,4 +18,4 @@ module purge
 echo "Slurm job id: "${SLURM_JOB_ID}
 
 # Run python script
-python slowfast/tools/run_net.py --cfg kabr/KABR/configs/UNIFORMERv2.yaml
+python slowfast/tools/run_net.py --cfg kabr/KABR/configs/UNIFORMERv2_lr2e-6_ep10_test.yaml
