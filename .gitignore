@@ -187,6 +187,7 @@ slowfast/build
 kabr/KABR/logs/*
 kabr/KABR/annotation/*
 slowfast/demo
+uniformerv2_tools
 
 .vscode
 *.out
