@@ -1,13 +1,13 @@
 TRAIN:
-  ENABLE: True
+  ENABLE: False
   DATASET: charades
   BATCH_SIZE: 64
   EVAL_PERIOD: 5
   CHECKPOINT_PERIOD: 10
   AUTO_RESUME: True
-  # CHECKPOINT_FILE_PATH: /jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/slowfast/projects/slowfast/SLOWFAST_4x16_R50.pkl
-  # CHECKPOINT_TYPE: caffe2
-  # CHECKPOINT_EPOCH_RESET: True
+  CHECKPOINT_FILE_PATH: /jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/slowfast/projects/i3d/I3D_8x8_R50.pkl
+  CHECKPOINT_TYPE: caffe2
+  CHECKPOINT_EPOCH_RESET: True
   MIXED_PRECISION: True
 
 TEST:
@@ -17,17 +17,17 @@ TEST:
   NUM_ENSEMBLE_VIEWS: 2
   NUM_SPATIAL_CROPS: 1
   CHECKPOINT_TYPE: pytorch
-  SAVE_RESULTS_PATH: "/jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/kabr/KABR/logs/slowfast-kabr/results.txt"
-  CHECKPOINT_FILE_PATH: /jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/kabr/KABR/logs/slowfast-kabr/checkpoints/checkpoint_epoch_00120.pyth
+  SAVE_RESULTS_PATH: "/jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/kabr/KABR/logs/id3-kabr-kinetics-lr1e-1-ep120-best-epoch/results.txt"
+  CHECKPOINT_FILE_PATH: /jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/kabr/KABR/logs/i3d-kabr-kinetics/checkpoints/checkpoint_epoch_00080.pyth
 
 DATA:
   NUM_FRAMES: 16
   SAMPLING_RATE: 5
-  TRAIN_JITTER_SCALES: [256, 256]
-  TRAIN_CROP_SIZE: 256
-  TEST_CROP_SIZE: 256
+  TRAIN_JITTER_SCALES: [320, 320]
+  TRAIN_CROP_SIZE: 320
+  TEST_CROP_SIZE: 320
   TRAIN_CROP_NUM_TEMPORAL: 1
-  INPUT_CHANNEL_NUM: [3, 3]
+  INPUT_CHANNEL_NUM: [3]
   MULTI_LABEL: True
   RANDOM_FLIP: True
   SSL_COLOR_JITTER: True
@@ -38,12 +38,6 @@ DATA:
   PATH_TO_DATA_DIR: "/jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/kabr/KABR/annotation"
   PATH_PREFIX: "/jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/kabr/KABR/dataset/image"
   DECODING_BACKEND: torchvision
-  
-SLOWFAST:
-  ALPHA: 4 # check it 16/alpha * 4
-  BETA_INV: 8
-  FUSION_CONV_CHANNEL_RATIO: 2
-  FUSION_KERNEL_SZ: 5 # changed from 7 to 5
 
 RESNET:
   ZERO_INIT_FINAL_BN: True
@@ -52,40 +46,36 @@ RESNET:
   DEPTH: 50
   TRANS_FUNC: bottleneck_transform
   STRIDE_1X1: False
-  NUM_BLOCK_TEMP_KERNEL: [[3, 3], [4, 4], [6, 6], [3, 3]]
-  SPATIAL_STRIDES: [[1, 1], [2, 2], [2, 2], [2, 2]]
-  SPATIAL_DILATIONS: [[1, 1], [1, 1], [1, 1], [1, 1]]
-  
+  NUM_BLOCK_TEMP_KERNEL: [[3], [4], [6], [3]]
+
 NONLOCAL:
-  LOCATION: [[[], []], [[], []], [[], []], [[], []]]
-  GROUP: [[1, 1], [1, 1], [1, 1], [1, 1]]
-  INSTANTIATION: dot_product
+  LOCATION: [[[]], [[]], [[]], [[]]]
+  GROUP: [[1], [1], [1], [1]]
+  INSTANTIATION: softmax
 
 BN:
   USE_PRECISE_STATS: True
-  NUM_BATCHES_PRECISE: 200
+  NUM_BATCHES_PRECISE: 100
   NORM_TYPE: sync_batchnorm
   NUM_SYNC_DEVICES: 1
 
 SOLVER:
-  BASE_LR: 0.0375
-  LR_POLICY: steps_with_relative_lrs
-  LRS: [1, 0.1, 0.01, 0.001, 0.0001, 0.00001]
-  STEPS: [0, 41, 49]
+  BASE_LR: 0.1
+  LR_POLICY: cosine
   MAX_EPOCH: 120
   MOMENTUM: 0.9
   WEIGHT_DECAY: 1e-4
-  WARMUP_EPOCHS: 3.0
-  WARMUP_START_LR: 0.0001
+  WARMUP_EPOCHS: 34.0
+  WARMUP_START_LR: 0.01
   OPTIMIZING_METHOD: sgd
 
 MODEL:
   NUM_CLASSES: 8
-  ARCH: slowfast
+  ARCH: i3d
+  MODEL_NAME: ResNet
   LOSS_FUNC: EQL
   HEAD_ACT: sigmoid
   DROPOUT_RATE: 0.5
-
 
 DATA_LOADER:
   NUM_WORKERS: 8
@@ -94,7 +84,7 @@ DATA_LOADER:
 NUM_GPUS: 8
 NUM_SHARDS: 1
 RNG_SEED: 0
-OUTPUT_DIR: /jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/kabr/KABR/logs/slowfast-kabr
+OUTPUT_DIR: /jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/kabr/KABR/logs/id3-kabr-kinetics-lr1e-1-ep120-best-epoch
 LOG_MODEL_INFO: True
 
 TENSORBOARD:
@@ -114,12 +104,12 @@ TENSORBOARD:
     INPUT_VIDEO: True
     LAYER_LIST: ['s5/pathway0_res14']
     GRAD_CAM:
-      ENABLE: False
+      ENABLE: True
       LAYER_LIST: ['s5/pathway0_res14']
 
 DEMO:
   ENABLE: False
-  LABEL_FILE_PATH: /jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/kabr/KABR/KABR/annotation/classes.json
+  LABEL_FILE_PATH: /jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/kabr/KABR/annotation/classes.json
   # INPUT_VIDEO: # path to input
   # OUTPUT_FILE: # path to output
   THREAD_ENABLE: False

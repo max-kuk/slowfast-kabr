@@ -3,20 +3,24 @@
 
 """Loss functions."""
 
-import pandas as pd
-import numpy as np
+import os
+from distutils.sysconfig import get_python_lib
 from functools import partial
+
+import numpy as np
+import pandas as pd
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-
 from pytorchvideo.losses.soft_target_cross_entropy import (
     SoftTargetCrossEntropyLoss,
 )
 
-import os
-from distutils.sysconfig import get_python_lib
-os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = f"{get_python_lib()}{os.sep}cv2{os.sep}qt{os.sep}plugins{os.sep}platforms"
+os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = (
+    f"{get_python_lib()}{os.sep}cv2{os.sep}qt{os.sep}plugins{os.sep}platforms"
+)
+
+
 class ContrastiveLoss(nn.Module):
     def __init__(self, reduction="mean"):
         super(ContrastiveLoss, self).__init__()
@@ -24,9 +28,7 @@ class ContrastiveLoss(nn.Module):
 
     def forward(self, inputs, dummy_labels=None):
         targets = torch.zeros(inputs.shape[0], dtype=torch.long).cuda()
-        loss = nn.CrossEntropyLoss(reduction=self.reduction).cuda()(
-            inputs, targets
-        )
+        loss = nn.CrossEntropyLoss(reduction=self.reduction).cuda()(inputs, targets)
         return loss
 
 
@@ -68,35 +70,38 @@ class MultipleMSELoss(nn.Module):
 
 
 # dir_action_count = "/mnt/HDD/Backup/Animal Action Recognition/Animal_Kingdom/annotation/df_action.xlsx"
-# dir_action_count = "/mnt/HDD/Backup/Animal Action Recognition/baboons/tracks_ds/df_action.xlsx"
+# dir_action_count = "/jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/animal_kingdom/annotation/df_action.xlsx"
 dir_action_count = "kabr/KABR/annotation/distribution.xlsx"
 
 
 class BCELoss(nn.Module):
-    '''
+    """
     Function: BCELoss
     Params:
         predictions: input->(batch_size, 1004)
         targets: target->(batch_size, 1004)
     Return:
         bceloss
-    '''
+    """
 
-    def __init__(self,logits=True, reduction="mean"):
+    def __init__(self, logits=True, reduction="mean"):
         super(BCELoss, self).__init__()
         self.logits = logits
         self.reduction = reduction
 
     def forward(self, inputs, targets):
         if self.logits:
-            BCE_loss = F.binary_cross_entropy_with_logits(inputs, targets, reduction=self.reduction)
+            BCE_loss = F.binary_cross_entropy_with_logits(
+                inputs, targets, reduction=self.reduction
+            )
         else:
             BCE_loss = F.binary_cross_entropy(inputs, targets, reduction=self.reduction)
 
         return BCE_loss
 
+
 class FocalLoss(nn.Module):
-    '''
+    """
     Function: FocalLoss
     Params:
         alpha: scale factor, default = 1
@@ -105,18 +110,20 @@ class FocalLoss(nn.Module):
         focalloss
     https://github.com/17Skye17/VideoLT/blob/master/ops/losses.py
     Original: https://github.com/facebookresearch/Detectron
-    '''
+    """
 
     def __init__(self, logits=True, reduction="mean"):
         super(FocalLoss, self).__init__()
-        self.alpha = 1 
-        self.gamma = 0 
+        self.alpha = 1
+        self.gamma = 0
         self.logits = logits
         self.reduction = reduction
 
     def forward(self, inputs, targets):
         if self.logits:
-            BCE_loss = F.binary_cross_entropy_with_logits(inputs, targets, reduction="none")
+            BCE_loss = F.binary_cross_entropy_with_logits(
+                inputs, targets, reduction="none"
+            )
         else:
             BCE_loss = F.binary_cross_entropy(inputs, targets, reduction="none")
         pt = torch.exp(-BCE_loss)
@@ -131,16 +138,16 @@ class FocalLoss(nn.Module):
 
 
 class LDAM(nn.Module):
-    '''
+    """
     https://github.com/17Skye17/VideoLT/blob/master/ops/losses.py
     Original: https://github.com/kaidic/LDAM-DRW/blob/master/losses.py
-    '''
+    """
 
-    def __init__(self, logits=True, reduction='mean', max_m=0.5, s=30, step_epoch=80):
+    def __init__(self, logits=True, reduction="mean", max_m=0.5, s=30, step_epoch=80):
         super(LDAM, self).__init__()
 
         data = pd.read_excel(dir_action_count)
-        self.num_class_list = list(map(float, data["count"].tolist()))  
+        self.num_class_list = list(map(float, data["count"].tolist()))
         self.reduction = reduction
         self.logits = logits
 
@@ -157,34 +164,41 @@ class LDAM(nn.Module):
         betas = [0, 0.9999]
         effective_num = 1.0 - np.power(betas[idx], self.num_class_list)
         per_cls_weights = (1.0 - betas[idx]) / np.array(effective_num)
-        per_cls_weights = per_cls_weights / np.sum(per_cls_weights) * len(self.num_class_list)
+        per_cls_weights = (
+            per_cls_weights / np.sum(per_cls_weights) * len(self.num_class_list)
+        )
         self.weight = torch.FloatTensor(per_cls_weights).cuda()
 
     def forward(self, inputs, targets):
-        targets=targets.to(torch.float32)
+        targets = targets.to(torch.float32)
         batch_m = torch.matmul(self.m_list[None, :], targets.transpose(0, 1))
         batch_m = batch_m.view((-1, 1))
         inputs_m = inputs - batch_m
 
         output = torch.where(targets.type(torch.uint8), inputs_m, inputs)
         if self.logits:
-            loss = F.binary_cross_entropy_with_logits(self.s * output, targets, reduction=self.reduction,
-                                                    weight=self.weight)
+            loss = F.binary_cross_entropy_with_logits(
+                self.s * output, targets, reduction=self.reduction, weight=self.weight
+            )
         else:
-            loss = F.binary_cross_entropy(self.s * output, targets, reduction=self.reduction, weight=self.weight)
+            loss = F.binary_cross_entropy(
+                self.s * output, targets, reduction=self.reduction, weight=self.weight
+            )
         return loss
 
 
 class EQL(nn.Module):
-    '''
+    """
     https://github.com/17Skye17/VideoLT/blob/master/ops/losses.py
     Original: https://github.com/tztztztztz/eql.detectron2
-    '''
+    """
 
-    def __init__(self, logits=True, reduction='mean', max_tail_num=100, gamma=1.76 * 1e-3):
+    def __init__(
+        self, logits=True, reduction="mean", max_tail_num=100, gamma=1.76 * 1e-3
+    ):
         super(EQL, self).__init__()
         data = pd.read_excel(dir_action_count)
-        num_class_list = list(map(float, data["count"].tolist())) 
+        num_class_list = list(map(float, data["count"].tolist()))
         self.reduction = reduction
         self.logits = logits
 
@@ -218,9 +232,13 @@ class EQL(nn.Module):
         # targets = targets.type(torch.FloatTensor).cuda()
         eql_w = 1 - self.beta_func() * self.threshold_func() * (1 - targets)
         if self.logits:
-            loss = F.binary_cross_entropy_with_logits(self.inputs, targets, reduction=self.reduction, weight=eql_w)
+            loss = F.binary_cross_entropy_with_logits(
+                self.inputs, targets, reduction=self.reduction, weight=eql_w
+            )
         else:
-            loss = F.binary_cross_entropy(self.inputs, targets, reduction=self.reduction, weight=eql_w)
+            loss = F.binary_cross_entropy(
+                self.inputs, targets, reduction=self.reduction, weight=eql_w
+            )
         return loss
 
 
@@ -228,13 +246,10 @@ _LOSSES = {
     "cross_entropy": nn.CrossEntropyLoss,
     "bce": nn.BCELoss,
     "bce_logit": nn.BCEWithLogitsLoss,
-    "soft_cross_entropy": partial(
-        SoftTargetCrossEntropyLoss, normalize_targets=False
-    ),
+    "soft_cross_entropy": partial(SoftTargetCrossEntropyLoss, normalize_targets=False),
     "contrastive_loss": ContrastiveLoss,
     "mse": nn.MSELoss,
     "multi_mse": MultipleMSELoss,
-
     # Extra.
     "bce_loss": BCELoss,
     "focal_loss": FocalLoss,

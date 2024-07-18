@@ -18,4 +18,8 @@ module purge
 echo "Slurm job id: "${SLURM_JOB_ID}
 
 # Run python script
-python slowfast/tools/run_net.py --cfg kabr/KABR/configs/UNIFORMERv2_lr2e-6_ep10_test.yaml
+#python slowfast/tools/run_net.py --cfg kabr/KABR/configs/SLOWFAST.yaml
+
+
+# animal kingdom
+python slowfast/tools/run_net.py --cfg /jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/kabr/KABR/configs/SLOWFAST_lr3.75e-2_ep120-best_epoch.yaml

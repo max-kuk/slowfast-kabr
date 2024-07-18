@@ -4,7 +4,6 @@
 
 #SBATCH --job-name=gpujob                      # patrition name
 #SBATCH --partition small
-#SBATCH --output=gpu_train_small-job.out                 # log file
 #SBATCH --time=0:45:00
 #SBATCH --nodes=1
 #SBATCH --gres=gpu:8
@@ -18,4 +17,4 @@ module purge
 echo "Slurm job id: "${SLURM_JOB_ID}
 
 # Run python script
-python slowfast/tools/run_net.py --cfg kabr/KABR/configs/UNIFORMERv2.yaml
+python slowfast/tools/run_net.py --cfg kabr/KABR/configs/SLOWFAST.yaml

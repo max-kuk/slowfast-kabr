@@ -1,13 +1,12 @@
 TRAIN:
-  ENABLE: False
+  ENABLE: True
   DATASET: charades
   BATCH_SIZE: 192
-  EVAL_PERIOD: 5
+  EVAL_PERIOD: 1
   CHECKPOINT_PERIOD: 10
-  AUTO_RESUME: True
-  #CHECKPOINT_FILE_PATH: /jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/slowfast/projects/uniformerv2/k400_k710_uniformerv2_b16_8x224.pyth
-  #CHECKPOINT_TYPE: pytorch
-  #CHECKPOINT_EPOCH_RESET: True
+  CHECKPOINT_FILE_PATH: /jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/slowfast/projects/uniformerv2/k400_k710_uniformerv2_l14_16x224.pyth
+  CHECKPOINT_TYPE: pytorch
+  CHECKPOINT_EPOCH_RESET: True
   MIXED_PRECISION: True
 TEST:
   ENABLE: True
@@ -15,12 +14,10 @@ TEST:
   BATCH_SIZE: 192
   NUM_SPATIAL_CROPS: 1
   NUM_ENSEMBLE_VIEWS: 2
-  SAVE_RESULTS_PATH: "/jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/kabr/KABR/logs/uniformerv2-kabr-kinetics-lr2e-5-ep100-train/results.txt"
-  CHECKPOINT_FILE_PATH: /jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/kabr/KABR/logs/uniformerv2-kabr-kinetics-lr2e-5-ep100/checkpoints/checkpoint_epoch_00100.pyth
 DATA:
   USE_OFFSET_SAMPLING: True
   DECODING_BACKEND: decord
-  NUM_FRAMES: 8
+  NUM_FRAMES: 16
   SAMPLING_RATE: 16
   MULTI_LABEL: True
   ENSEMBLE_METHOD: max
@@ -28,24 +25,24 @@ DATA:
   TRAIN_CROP_SIZE: 224
   TEST_CROP_SIZE: 224
   INPUT_CHANNEL_NUM: [3]
-  PATH_TO_DATA_DIR: "/jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/kabr/KABR/annotation"
-  PATH_PREFIX: "/jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/kabr/KABR/dataset/image"
+  SAVE_RESULTS_PATH: "/jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/kabr/KABR/logs/uniformerv2-l-kabr-kinetics-lr1e-4-ep50/results.txt"
+  CHECKPOINT_FILE_PATH: /jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/kabr/KABR/logs/uniformerv2-l-kabr-kinetics-lr1e-4-ep50/checkpoints/checkpoint_epoch_00050.pyth
   TRAIN_JITTER_SCALES_RELATIVE: [0.08, 1.0]
   TRAIN_JITTER_ASPECT_RELATIVE: [0.75, 1.3333]
 UNIFORMERV2:
-  BACKBONE: 'uniformerv2_b16'
+  BACKBONE: 'uniformerv2_l14'
   N_LAYERS: 4
-  N_DIM: 768
-  N_HEAD: 12
+  N_DIM: 1024
+  N_HEAD: 16
   MLP_FACTOR: 4.0
   BACKBONE_DROP_PATH_RATE: 0.
   DROP_PATH_RATE: 0.
   MLP_DROPOUT: [0.5, 0.5, 0.5, 0.5]
   CLS_DROPOUT: 0.5
-  RETURN_LIST: [8, 9, 10, 11]
+  RETURN_LIST: [20, 21, 22, 23]
   NO_LMHRA: True
   TEMPORAL_DOWNSAMPLE: False
-  PRETRAIN: "/jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/slowfast/projects/uniformerv2/k400_k710_uniformerv2_b16_8x224.pyth"
+  PRETRAIN: "/jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/slowfast/projects/uniformerv2/k400_k710_uniformerv2_l14_16x224.pyth"
   DELETE_SPECIAL_HEAD: True
 AUG:
   NUM_SAMPLE: 1
@@ -63,13 +60,13 @@ BN:
 SOLVER:
   ZERO_WD_1D_PARAM: True
   BASE_LR_SCALE_NUM_SHARDS: True
-  BASE_LR: 2e-5
+  BASE_LR: 1e-4
   COSINE_AFTER_WARMUP: True
   COSINE_END_LR: 1e-6
   WARMUP_START_LR: 1e-6
-  WARMUP_EPOCHS: 10.0
+  WARMUP_EPOCHS: 0.
   LR_POLICY: cosine
-  MAX_EPOCH: 100
+  MAX_EPOCH: 50
   MOMENTUM: 0.9
   WEIGHT_DECAY: 0.05
   OPTIMIZING_METHOD: adamw
@@ -78,7 +75,7 @@ MODEL:
   NUM_CLASSES: 8
   ARCH: uniformerv2
   MODEL_NAME: Uniformerv2
-  LOSS_FUNC: EQL  
+  LOSS_FUNC: EQL
   DROPOUT_RATE: 0.5
   USE_CHECKPOINT: False
   CHECKPOINT_NUM: [0]
@@ -87,7 +84,7 @@ DATA_LOADER:
   NUM_WORKERS: 8
   PIN_MEMORY: True
 
-  
+
 TENSORBOARD:
   ENABLE: True
   CLASS_NAMES_PATH: /jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/kabr/KABR/annotation/classes.json
@@ -110,4 +107,4 @@ TENSORBOARD:
 NUM_GPUS: 8
 NUM_SHARDS: 1
 RNG_SEED: 0
-OUTPUT_DIR: /jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/kabr/KABR/logs/uniformerv2-kabr-kinetics-lr2e-5-ep100-train
+OUTPUT_DIR: /jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/kabr/KABR/logs/uniformerv2-l-kabr-kinetics-lr1e-4-ep50

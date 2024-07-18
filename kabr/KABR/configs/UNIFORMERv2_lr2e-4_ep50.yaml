@@ -15,7 +15,7 @@ TEST:
   BATCH_SIZE: 192
   NUM_SPATIAL_CROPS: 1
   NUM_ENSEMBLE_VIEWS: 2
-  SAVE_RESULTS_PATH: "/jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/kabr/KABR/logs/uniformerv2-kabr-kinetics-lr2e-4-ep50/results.txt"
+  SAVE_RESULTS_PATH: "/jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/kabr/KABR/logs/uniformerv2-kabr-kinetics-lr2e-4-ep50-train/results.txt"
   CHECKPOINT_FILE_PATH: /jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/kabr/KABR/logs/uniformerv2-kabr-kinetics-lr2e-4-ep50/checkpoints/checkpoint_epoch_00050.pyth
 DATA:
   USE_OFFSET_SAMPLING: True
@@ -110,4 +110,4 @@ TENSORBOARD:
 NUM_GPUS: 8
 NUM_SHARDS: 1
 RNG_SEED: 0
-OUTPUT_DIR: /jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/kabr/KABR/logs/uniformerv2-kabr-kinetics-lr2e-4-ep50
+OUTPUT_DIR: /jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/kabr/KABR/logs/uniformerv2-kabr-kinetics-lr2e-4-ep50-train

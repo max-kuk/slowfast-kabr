@@ -188,6 +188,8 @@ kabr/KABR/logs/*
 kabr/KABR/annotation/*
 slowfast/demo
 uniformerv2_tools
+animal_kingdom
+mammalnet
 
 .vscode
 *.out
@@ -200,3 +202,4 @@ uniformerv2_tools
 *.jpg
 *.mp4
 *.zip
+
