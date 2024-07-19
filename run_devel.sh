@@ -22,4 +22,4 @@ echo "Slurm job id: "${SLURM_JOB_ID}
 
 
 # animal kingdom
-python slowfast/tools/run_net.py --cfg /jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/kabr/KABR/configs/SLOWFAST_lr3.75e-2_ep120-best_epoch.yaml
+python slowfast/tools/run_net_composition.py --cfg /jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/mammalnet/configs/slowfast_32x8_composition.yaml

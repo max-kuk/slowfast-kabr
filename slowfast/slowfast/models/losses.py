@@ -70,8 +70,8 @@ class MultipleMSELoss(nn.Module):
 
 
 # dir_action_count = "/mnt/HDD/Backup/Animal Action Recognition/Animal_Kingdom/annotation/df_action.xlsx"
-# dir_action_count = "/jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/animal_kingdom/annotation/df_action.xlsx"
-dir_action_count = "kabr/KABR/annotation/distribution.xlsx"
+dir_action_count = "/jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/animal_kingdom/annotation/df_action.xlsx"
+# dir_action_count = "kabr/KABR/annotation/distribution.xlsx"
 
 
 class BCELoss(nn.Module):

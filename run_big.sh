@@ -23,7 +23,7 @@ echo "Slurm job id: "${SLURM_JOB_ID}
 # animal kingdom
 #python slowfast/tools/run_net.py --cfg /jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/kabr/KABR/configs/SLOWFAST_lr3.75e-2_ep120.yaml
 
-python slowfast/tools/run_net.py --cfg /jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/kabr/KABR/configs/X3D_L_lr5e-2_ep120_AK.yaml
+#python slowfast/tools/run_net.py --cfg /jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/kabr/KABR/configs/X3D_L_lr5e-2_ep120_AK.yaml
 
 
-# python slowfast/tools/run_net.py --cfg /jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/animal_kingdom/configs/X3D_L_lr5e-2_ep100.yaml
+python slowfast/tools/run_net.py --cfg /jmain02/home/J2AD001/wwp02/mxk71-wwp02/uob_project/animal_kingdom/configs/X3D_L_lr5e-2_ep200.yaml

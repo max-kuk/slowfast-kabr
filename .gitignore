@@ -184,6 +184,7 @@ pyrightconfig.json
 kabr/KABR/dataset
 kabr/KABR.zip
 slowfast/build
+build
 kabr/KABR/logs/*
 kabr/KABR/annotation/*
 slowfast/demo
